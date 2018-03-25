@@ -1,7 +1,8 @@
 # report.py
 
 '''opens a portfolio and reads the data into a list
-of dictionaries.'''
+of dictionaries. Then defines another function that
+makes a dictionary of prices for more stocks.'''
 
 import csv
 
@@ -21,9 +22,28 @@ def read_portfolio(filename):
 
 
 
+def read_prices(filename):
+    '''Read the prices into a dictionary mapping prices
+    to names.'''
+    prices = {}
+    with open(filename) as f:
+        rows = csv.reader(f)
+
+        for row in rows:
+            try:
+               prices[row[0]] = float(row[1])
+            except IndexError:
+                print("got a bad value:", row)
+    return prices
+
+
 
 if __name__=='__main__':
-    
+
     portfolio = read_portfolio('Data/portfolio.csv')
-    print("Portfolio: ", portfolio)
+    prices    = read_prices('Data/prices.csv')
+
+    
+    
+
     
