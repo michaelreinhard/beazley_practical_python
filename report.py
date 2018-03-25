@@ -33,8 +33,16 @@ def read_prices(filename):
             try:
                prices[row[0]] = float(row[1])
             except IndexError:
-                print("got a bad value:", row)
+                continue
     return prices
+
+def make_report_data(portfolio, prices):
+    for s in portfolio:
+        current_value = s['shares']*prices[s['name']]
+        s['current_value'] = current_value
+
+    return portfolio
+
 
 
 
@@ -42,7 +50,8 @@ if __name__=='__main__':
 
     portfolio = read_portfolio('Data/portfolio.csv')
     prices    = read_prices('Data/prices.csv')
-
+    report = make_report_data(portfolio, prices)
+    print(report)
     
     
 
