@@ -41,8 +41,10 @@ def make_report_data(portfolio, prices):
     headers = ('Name', 'Shares', 'Price', 'Change')
     report_data.append(headers)
     for s in portfolio:
+        
         current_value = s['shares']*prices[s['name']]
         s['current_value'] = current_value
+        s['price'] = prices[s['name']] - s['price']
         t = (s['name'], s['shares'], s['price'],s['current_value']) 
         report_data.append(t)
     return report_data
