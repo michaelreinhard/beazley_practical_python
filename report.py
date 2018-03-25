@@ -6,18 +6,18 @@ makes a dictionary of prices for more stocks.'''
 
 import csv
 
-portfolio = []
+
 
 def read_portfolio(filename):
-
+    portfolio = []
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
         headers = next(rows)
         for row in rows:
             
             holding = dict(zip(headers, row))
-            holding['shares']=int(holding['shares'])
-            holding['price']=float(holding['price'])
+            holding['shares'] = int(holding['shares'])
+            holding['price'] = float(holding['price'])
             portfolio.append(holding)
 
     return portfolio
@@ -43,7 +43,7 @@ def make_report_data(portfolio, prices):
     headers = ('Name', 'Shares', 'Price', 'Change')
     report_data.append(headers)
     for s in portfolio:
-        print('here is s',s)
+
         current_value = s['shares']*prices[s['name']]
         s['current_value'] = current_value
         s['price'] = prices[s['name']] - s['price']
@@ -56,13 +56,13 @@ def make_report_data(portfolio, prices):
 
 if __name__=='__main__':
 
-    portfolio = read_portfolio('Data/portfoliodate.csv')
+    portfolio = read_portfolio('Data/portfolio.csv')
     prices    = read_prices('Data/prices.csv')
     report = make_report_data(portfolio, prices)
-    print(f'%10s %10s %10s %10s' % report[0])
-    print(('-' * 10 + ' ') * 4)
-    for r in report[1:]:
-        print('%10s %10d %10.2f %10.2f' % r)
+##    print(f'%10s %10s %10s %10s' % report[0])
+##    print(('-' * 10 + ' ') * 4)
+##    for r in report[1:]:
+##        print('%10s %10d %10.2f %10.2f' % r)
     
     
 
