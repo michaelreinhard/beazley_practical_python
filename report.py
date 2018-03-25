@@ -1,4 +1,4 @@
-# report.py
+##report.py
 
 '''opens a portfolio and reads the data into a list
 of dictionaries. Then defines another function that
@@ -38,6 +38,8 @@ def read_prices(filename):
 
 def make_report_data(portfolio, prices):
     report_data = []
+    headers = ('Name', 'Shares', 'Price', 'Change')
+    report_data.append(headers)
     for s in portfolio:
         current_value = s['shares']*prices[s['name']]
         s['current_value'] = current_value
@@ -53,7 +55,9 @@ if __name__=='__main__':
     portfolio = read_portfolio('Data/portfolio.csv')
     prices    = read_prices('Data/prices.csv')
     report = make_report_data(portfolio, prices)
-    for r in report:
+    print(f'%10s %10s %10s %10s' % report[0])
+    print(('-' * 10 + ' ') * 4)
+    for r in report[1:]:
         print('%10s %10d %10.2f %10.2f' % r)
     
     
