@@ -1,7 +1,7 @@
 # report.py
 
 '''opens a portfolio and reads the data into a list
-of tuples.'''
+of dictionaries.'''
 
 import csv
 
@@ -14,6 +14,7 @@ def read_portfolio(filename):
         headers = next(rows)
         for row in rows:
             holding = (row[0], int(row[1]), float(row[2]))
+            holding = dict(zip(headers, holding))
             portfolio.append(holding)
 
     return portfolio
