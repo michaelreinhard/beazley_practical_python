@@ -43,36 +43,60 @@ def read_prices(filename):
     return prices
 
 def make_report_data(portfolio, prices):
+    '''
+    Generate list of tuples showing the
+    (name, shares, price, change) given a portfolio
+    list and a prices dictionary.
+    '''
     report_data = []
-    headers = ('Name', 'Shares', 'Price', 'Change')
-    report_data.append(headers)
-    for s in portfolio:
+    for stock in portfolio:
 
-        current_value = s['shares']*prices[s['name']]
-        s['current_value'] = current_value
-##        s['price'] = prices[s['name']] - s['price']
-        t = (s['name'], s['shares'], s['price'], s['current_value']) 
-        report_data.append(t)
+        current_price = prices[stock['name']]
+        change = current_price - stock['price']
+        summary = (stock['name'], stock['shares'], current_price, change)
+        report_data.append(summary)
+
     return report_data
 
-'''Names are ambiguious here. Is the price reported supposed to
-be the purchase price or the current price? Also, he wants
-change. Is that the change in value of the entire holding? If so,
-shouldn't some of those numbers be negative?'''
+'''Change is just the change in the price. So Price is
+the purchase price and Change in the current price minus
+the purchase price.'''
 
+def print_report(report):
+    headers = ('Name', 'Shares', 'Price', 'Change')
+    print(f'%10s %10s %10s %10s' % headers)
+    print(('-' * 10 + ' ') * len(headers))
+    for r in report[1:]:
+        print('%10s %10d %10.2f %10.2f' % r)
+    
+    
+def portfolio_report(portfolio_data, prices_data):
+    '''
+    make a stock report given the portfolio and
+    current prices.
+    '''
+    #read in data files
+    portfolio = read_portfolio(portfolio_data)
+    prices = read_prices(prices_data)
 
+    #create report data
+    report = make_report_data(portfolio, prices)
 
+    #print out
+    print_report(report)
 
 if __name__=='__main__':
     pass
 
-    portfolio = read_portfolio('Data/portfolio.csv')
-    prices    = read_prices('Data/prices.csv')
-    report = make_report_data(portfolio, prices)
-##    print(f'%10s %10s %10s %10s' % report[0])
-##    print(('-' * 10 + ' ') * 4)
-##    for r in report[1:]:
-##        print('%10s %10d %10.2f %10.2f' % r)
+    portfolio_report('Data/portfolio.csv',
+                     'Data/prices.csv')
+
+
+##    portfolio = read_portfolio('Data/portfolio.csv')
+##    prices    = read_prices('Data/prices.csv')
+##    report = make_report_data(portfolio, prices)
+##    print_report(report)
+
     
     
 
