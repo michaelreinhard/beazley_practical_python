@@ -6,14 +6,11 @@ import fileparse
 def portfolio_cost(filename):
     '''computes the total cost of a portfolio'''
 
-    records = fileparse.parse_csv(filename, select=['shares', 'price'],
-              types=[int,float], has_headers=True,
-              delimiter=',', silence_errors=False)
-
+    records = fileparse.parse_csv(filename,
+                                    select=['name','shares','price'],
+                                    types=[str,int,float])
 
     return sum([record['shares']*record['price'] for record in records])
-
-
 
 
 
