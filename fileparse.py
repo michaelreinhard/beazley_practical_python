@@ -6,7 +6,7 @@ import csv
 
 def parse_csv(filename, select=None,
               types=None, has_headers=True,
-              delimiter=','):
+              delimiter=',', silence_errors=False):
     if select and not has_headers:
         raise RuntimeError('select requires column headers')
     
@@ -24,7 +24,7 @@ def parse_csv(filename, select=None,
             
         records = []
 
-        for row in rows:
+        for rowno, row in enumerate(rows, 1):
             #skip rows with no data
             if not row:   
                 continue
@@ -35,12 +35,20 @@ def parse_csv(filename, select=None,
 
             #apply type conversion on the row
             if types:
-                row = [func(val) for func, val in zip(types, row)]
+                try:
+                    row = [func(val) for func, val in zip(types, row)]
+                except ValueError as e:
+                    if not silence_errors:
+                        print(f'Row {rowno}: Could not convert {row}')
+                        print(f'Row {rowno}: Reason {e}')
+                    continue
+                    
             #make a dictionary or a tuple if no headers
             if headers:
                 record = dict(zip(headers, row))
             else:
                 record = tuple(row)
+            print("This is row {}: {}".format(rowno, row))
             records.append(record)
 
         return records
