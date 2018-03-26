@@ -48,7 +48,6 @@ def parse_csv(filename, select=None,
                 record = dict(zip(headers, row))
             else:
                 record = tuple(row)
-            print("This is row {}: {}".format(rowno, row))
             records.append(record)
 
         return records
