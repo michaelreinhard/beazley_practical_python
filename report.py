@@ -5,28 +5,16 @@ of dictionaries. Then defines another function that
 makes a dictionary of prices for more stocks.'''
 
 import csv
-
+import fileparse
 
 
 def read_portfolio(filename):
     '''Read a stock portfolio into a list of dictionaries
     with keys name, shares, and price.'''
-    portfolio = []
-    with open(filename) as f:
-        rows = csv.reader(f)
-        headers = next(rows)
-        
-        for row in rows:
-            record = dict(zip(headers, row))
-            stock = {
-                'name' : record['name'],
-                'shares' : int(record['shares']),
-                'price' : float(record['price'])
-            }
-            portfolio.append(stock)
 
-    return portfolio
-
+    return fileparse.parse_csv(filename,
+                                    select=['name','shares','price'],
+                                    types=[str,int,float])
 
 
 def read_prices(filename):
