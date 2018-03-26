@@ -1,23 +1,19 @@
 #pcost.py
 
 import csv
+import fileparse
 
 def portfolio_cost(filename):
     '''computes the total cost of a portfolio'''
 
     total = 0
-    
-    with open(filename, 'rt') as f:
-        rows = csv.reader(f)
-        headers = next(rows)
-        for n, row in enumerate(rows, start=1):
-            record = dict(zip(headers,row))
-            try:
-                nshares = int(record['shares'])
-                price = float(record['price'])
-                total += nshares*price
-            except ValueError:
-                print(f'Row {n}: Bad row: {row}')
+    records = fileparse.parse_csv(filename, select=['shares', 'price'],
+              types=[int,float], has_headers=True,
+              delimiter=',', silence_errors=False)
+
+    for record in records:
+        total += record['shares']*record['price']
+
     return total
 
 
@@ -32,7 +28,7 @@ if __name__ == '__main__':
     ##    filename = input('Enter a filename:')
 
 
-    filename = 'Data/missing.csv'
+    filename = 'Data/portfolio.csv'
     cost = portfolio_cost(filename)
     print('Total cost:', cost)
      
