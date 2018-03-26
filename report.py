@@ -20,15 +20,11 @@ def read_portfolio(filename):
 def read_prices(filename):
     '''Read the prices into a dictionary mapping prices
     to names.'''
-    prices = {}
-    with open(filename) as f:
-        rows = csv.reader(f)
-        for row in rows:
-            try:
-               prices[row[0]] = float(row[1])
-            except IndexError:
-                continue
-    return prices
+
+    #set has_headers=False and apply dict function to tuples
+    return dict(fileparse.parse_csv(filename, types=[str,float],
+                                 has_headers=False))
+
 
 def make_report_data(portfolio, prices):
     '''
