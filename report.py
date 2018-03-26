@@ -9,16 +9,21 @@ import csv
 
 
 def read_portfolio(filename):
+    '''Read a stock portfolio into a list of dictionaries
+    with keys name, shares, and price.'''
     portfolio = []
-    with open(filename, 'rt') as f:
+    with open(filename) as f:
         rows = csv.reader(f)
         headers = next(rows)
+        
         for row in rows:
-            
-            holding = dict(zip(headers, row))
-            holding['shares'] = int(holding['shares'])
-            holding['price'] = float(holding['price'])
-            portfolio.append(holding)
+            record = dict(zip(headers, row))
+            stock = {
+                'name' : record['name'],
+                'shares' : int(record['shares']),
+                'price' : float(record['price'])
+            }
+            portfolio.append(stock)
 
     return portfolio
 
@@ -30,7 +35,6 @@ def read_prices(filename):
     prices = {}
     with open(filename) as f:
         rows = csv.reader(f)
-
         for row in rows:
             try:
                prices[row[0]] = float(row[1])
@@ -46,15 +50,21 @@ def make_report_data(portfolio, prices):
 
         current_value = s['shares']*prices[s['name']]
         s['current_value'] = current_value
-        s['price'] = prices[s['name']] - s['price']
+##        s['price'] = prices[s['name']] - s['price']
         t = (s['name'], s['shares'], s['price'], s['current_value']) 
         report_data.append(t)
     return report_data
+
+'''Names are ambiguious here. Is the price reported supposed to
+be the purchase price or the current price? Also, he wants
+change. Is that the change in value of the entire holding? If so,
+shouldn't some of those numbers be negative?'''
 
 
 
 
 if __name__=='__main__':
+    pass
 
     portfolio = read_portfolio('Data/portfolio.csv')
     prices    = read_prices('Data/prices.csv')
