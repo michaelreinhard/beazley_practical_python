@@ -7,6 +7,7 @@ makes a dictionary of prices for more stocks.'''
 import csv
 import fileparse
 import stock
+import tableformat
 
 def read_portfolio(filename):
     '''Read a stock portfolio into a list of dictionaries
@@ -53,15 +54,17 @@ def make_report_data(portfolio, prices):
 the purchase price and Change in the current price minus
 the purchase price.'''
 
-def print_report(report):
-    headers = ('Name', 'Shares', 'Price', 'Change')
-    print(f'%10s %10s %10s %10s' % headers)
-    print(('-' * 10 + ' ') * len(headers))
-    for r in report[1:]:
-        print('%10s %10d %10.2f %10.2f' % r)
+def print_report(report, formatter):
+    '''
+    Print a nicely formatted table with headers
+    '''
+    formatter.headings(['Name', 'Shares', 'Price', 'Change'])
+    for name, shares, price, change in report:
+        rowdata = [ name, str(shares), f'{price:0.2f}', f'{change:0.2f}' ]
+        formatter.row(rowdata)
+
     
-    
-def portfolio_report(portfolio_data, prices_data):
+def portfolio_report(portfolio_data, prices_data, fmt='txt'):
     '''
     make a stock report given the portfolio and
     current prices.
@@ -74,13 +77,14 @@ def portfolio_report(portfolio_data, prices_data):
     report = make_report_data(portfolio, prices)
 
     #print out
-    print_report(report)
+    formatter = tableformat.create_formatter(fmt)
+    print_report(report, formatter)
 
 #to make it run on command line
 def main(args):
-    if len(args) != 3:
+    if len(args) != 4:
         raise SystemExit('Usage: %s portfoliofile, pricefile' % args[0])
-    portfolio_report(args[1], args[2])
+    portfolio_report(args[1], args[2], args[3])
 
 
 
