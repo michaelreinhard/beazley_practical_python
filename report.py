@@ -6,24 +6,31 @@ makes a dictionary of prices for more stocks.'''
 
 import csv
 import fileparse
-
+import stock
 
 def read_portfolio(filename):
     '''Read a stock portfolio into a list of dictionaries
     with keys name, shares, and price.'''
 
-    return fileparse.parse_csv(filename,
+    portdicts = fileparse.parse_csv(filename,
                                     select=['name','shares','price'],
                                     types=[str,int,float])
 
+    portfolio = [stock.Stock(d['name'], d['shares'], d['price'])
+                 for d in portdicts]
+
+    return portfolio
+
 
 def read_prices(filename):
-    '''Read the prices into a dictionary mapping prices
-    to names.'''
+    '''Read the prices into a stock object with price
+    and name attributes.'''
 
     #set has_headers=False and apply dict function to tuples
-    return dict(fileparse.parse_csv(filename, types=[str,float],
+    pricedict = dict(fileparse.parse_csv(filename, types=[str,float],
                                  has_headers=False))
+    return pricedict
+                
 
 
 def make_report_data(portfolio, prices):
@@ -35,9 +42,9 @@ def make_report_data(portfolio, prices):
     report_data = []
     for stock in portfolio:
 
-        current_price = prices[stock['name']]
-        change = current_price - stock['price']
-        summary = (stock['name'], stock['shares'], current_price, change)
+        current_price = prices[stock.name]
+        change = current_price - stock.price
+        summary = (stock.name, stock.shares, current_price, change)
         report_data.append(summary)
 
     return report_data
@@ -69,19 +76,19 @@ def portfolio_report(portfolio_data, prices_data):
     #print out
     print_report(report)
 
+#to make it run on command line
+def main(args):
+    if len(args) != 3:
+        raise SystemExit('Usage: %s portfoliofile, pricefile' % args[0])
+    portfolio_report(args[1], args[2])
+
+
+
 if __name__=='__main__':
-    pass
-
-    portfolio_report('Data/portfolio.csv',
-                     'Data/prices.csv')
+    import sys
+    main(sys.argv)
 
 
-##    portfolio = read_portfolio('Data/portfolio.csv')
-##    prices    = read_prices('Data/prices.csv')
-##    report = make_report_data(portfolio, prices)
-##    print_report(report)
-
-    
     
 
 
