@@ -1,29 +1,21 @@
 #pcost.py
 
-import csv
-import fileparse
+import report
 
 def portfolio_cost(filename):
     '''computes the total cost of a portfolio'''
 
-    records = fileparse.parse_csv(filename,
-                                    select=['name','shares','price'],
-                                    types=[str,int,float])
+    portfolio = report.read_portfolio(filename)
 
-    return sum([record['shares']*record['price'] for record in records])
+    return sum([stock['shares']*stock['price'] for stock in portfolio])
 
 
+def main(args):
+    if len(args) != 2:
+        raise SystemExit('Usage: %s datafile' % args[0])
+    filename = args[1]
+    print('Total cost:' , portfolio_cost(filename))
 
 if __name__ == '__main__':
-
-    ##import sys
-    ##if len(sys.argv) == 2:
-    ##    filename = sys.argv[1]
-    ##else:
-    ##    filename = input('Enter a filename:')
-
-
-    filename = 'Data/portfolio.csv'
-    cost = portfolio_cost(filename)
-    print('Total cost:', cost)
-     
+    import sys
+    main(sys.argv)
